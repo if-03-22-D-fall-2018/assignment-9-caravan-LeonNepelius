@@ -14,17 +14,17 @@
 #include "caravan.h"
 #include "general.h"
 
-typedef struct Node* p_Node;
-struct Node
+typedef struct NodeImplementation* Node;
+struct NodeImplementation
 {
   PackAnimal packanimal;
-  Node* next;
+  Node next;
 };
 
 struct CaravanImplementation
 {
     int length;
-    p_Node head;
+    Node head;
 };
 
 
@@ -43,10 +43,10 @@ int get_length(Caravan caravan)
 
 void delete_caravan(Caravan caravan)
 {
-  p_Node current = caravan->head;
+  Node current = caravan->head;
   while (current != 0)
   {
-    p_Node del = current;
+    Node del = current;
     current = current->next;
     sfree(del);
   }
@@ -61,8 +61,8 @@ void add_pack_animal(Caravan caravan, PackAnimal animal)
         {
             remove_pack_animal(get_caravan(animal), animal);
         }
-        p_Node current = caravan->head;
-        p_Node n_Animal = (p_Node)malloc(sizeof(struct Node));
+        Node current = caravan->head;
+        Node n_Animal = (Node)malloc(sizeof(struct NodeImplementation));
         n_Animal->packanimal = animal;
         n_Animal->next = 0;
         if(caravan->head == 0)
@@ -73,10 +73,16 @@ void add_pack_animal(Caravan caravan, PackAnimal animal)
         {
             while(current->next != 0)
             {
-                if(current->packanimal == animal) return;
+                if(current->packanimal == animal)
+                {
+                  return;
+                }
                 current = current->next;
             }
-            if(current->packanimal == animal) return;
+            if(current->packanimal == animal)
+            {
+              return;
+            }
             current->next = n_Animal;
         }
         add_to_caravan(animal, caravan);
@@ -88,8 +94,8 @@ void remove_pack_animal(Caravan caravan, PackAnimal animal)
 {
   if(animal!=0)
   {
-    p_Node current = caravan->head;
-    p_Node prev;
+    Node current = caravan->head;
+    Node prev;
     if(current != 0 && current->packanimal == animal)
     {
         caravan->head = current->next;
@@ -117,7 +123,7 @@ void remove_pack_animal(Caravan caravan, PackAnimal animal)
 
 int get_caravan_load(Caravan caravan)
 {
-  p_Node current = caravan->head;
+  Node current = caravan->head;
   int load = 0;
   while(current!=0)
   {
@@ -129,7 +135,7 @@ int get_caravan_load(Caravan caravan)
 
 void unload(Caravan caravan)
 {
-  p_Node current = caravan->head;
+  Node current = caravan->head;
   while(current != 0)
   {
       unload(current->packanimal);
@@ -139,7 +145,7 @@ void unload(Caravan caravan)
 
 int get_caravan_speed(Caravan caravan)
 {
-  p_Node current = caravan->head;
+  Node current = caravan->head;
   int speed = 50;
   while(current!=0)
   {
